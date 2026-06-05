@@ -1,7 +1,7 @@
 ARG ENV=base
 ARG PYTHON_VERSION
 
-FROM python:${PYTHON_VERSION}-slim-bookworm AS python
+FROM python:${PYTHON_VERSION}-slim-trixie AS python
 
 
 # ┌─────────────────────────────────────────────────────────────┐

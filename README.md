@@ -10,8 +10,8 @@ The following CKAN versions are available in base or dev forms. They are disting
 
 | CKAN Version | Type |  Base image | Docker tag | Notes |
 | --- | --- | --- | --- | --- |
-| **2.11.x** | **base image** | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.11`, `ckan/ckan-base:2.11.5`, `ckan/ckan-base:2.11-py3.10`, `ckan/ckan-base:2.11.5-py3.10`          |  |
-| **2.11.x** | **dev image**  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.11`, `ckan/ckan-dev:2.11.5`, `ckan/ckan-dev:2.11-py3.10`, `ckan/ckan-dev:2.11.5-py3.10`            |  |
+| **2.11.x** | **base image** | `python:3.12.13-slim-trixie` | `ckan/ckan-base:2.11`, `ckan/ckan-base:2.11.5`, `ckan/ckan-base:2.11-py3.12.13`, `ckan/ckan-base:2.11.5-py3.12.13`          |  |
+| **2.11.x** | **dev image**  | `python:3.12.13-slim-trixie` | `ckan/ckan-dev:2.11`, `ckan/ckan-dev:2.11.5`, `ckan/ckan-dev:2.11-py3.12.13`, `ckan/ckan-dev:2.11.5-py3.12.13`            |  |
 | 2.10.x | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.10-py3.10`, `ckan/ckan-base:2.10.10-py3.10` |  |
 | 2.10.x | dev image  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.10-py3.10`, `ckan/ckan-dev:2.10.10-py3.10`   |  |
 | 2.10.x | base image | `alpine:3.17`               | `ckan/ckan-base:2.10.10`, `ckan/ckan-base:2.10`               | :warning: Deprecated. Please use a Python/Debian based image |
@@ -39,7 +39,7 @@ Each CKAN version is located in separate repo containing:
 ckan-X.XX
 ├── Dockerfile          # Dockerfile for the image (in older versions there might be one for alpine and one for python)
 ├── VERSION.txt         # Full CKAN version built (eg. 2.11.5, 2.10.10)
-├── PYTHON_VERSION.txt  # Python version used (eg. 3.10)
+├── PYTHON_VERSION.txt  # Python version used (eg. 3.12.13)
 └── setup               # Setup scripts used by the images
     ├── prerun.py
     ├── start_ckan_development.sh
@@ -105,9 +105,9 @@ For instance:
 ./build.sh build 2.11
 ./build.sh build 2.10 base
 ./build.sh build 2.9 dev
-./build.sh build 2.11 3.11
+./build.sh build 2.11 3.12.13
 ./build.sh build 2.9 3.10
-./build.sh build 2.11 base 3.11
+./build.sh build 2.11.5 base 3.12.13
 ./build.sh build 2.10 dev 3.10
 ```
 
@@ -118,7 +118,7 @@ Of course the images can be built directly
 For instance:
 
 ```
-docker build --build-arg=ENV=base --build-arg=CKAN_REF=ckan-2.11.3 --build-arg=PYTHON_VERSION=3.11 -t ckan/ckan-base:2.11.3 -t ckan/ckan-base:2.11 -t ckan/ckan-base:2.11.3-py3.11 -t ckan/ckan-base:2.11-py3.11 ckan-2.11
+docker build --build-arg=ENV=base --build-arg=CKAN_REF=ckan-2.11.5 --build-arg=PYTHON_VERSION=3.12.13 -t ckan/ckan-base:2.11.5 -t ckan/ckan-base:2.11 -t ckan/ckan-base:2.11.5-py3.12.13 -t ckan/ckan-base:2.11-py3.12.13 ckan-2.11
 
 docker build --build-arg=ENV=base --build-arg=CKAN_REF=master --build-arg=PYTHON_VERSION=3.10 -t ckan/ckan-base:master -t ckan/ckan-base:master -t ckan/ckan-base:master-py3.10 -t ckan/ckan-base:master-py3.10 ckan-master
 

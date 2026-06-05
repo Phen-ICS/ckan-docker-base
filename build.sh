@@ -20,6 +20,24 @@ show_versions() {
     done
 }
 
+resolve_ckan_version_ref() {
+    local ckan_version_ref="$1"
+
+    if [ -d "ckan-$ckan_version_ref" ]; then
+        echo "$ckan_version_ref"
+        return 0
+    fi
+
+    local minor_version="${ckan_version_ref%.*}"
+    local minor_dir="ckan-$minor_version"
+    if [ -f "$minor_dir/VERSION.txt" ] && [ "$(cat "$minor_dir/VERSION.txt")" = "$ckan_version_ref" ]; then
+        echo "$minor_version"
+        return 0
+    fi
+
+    return 1
+}
+
 push_images() {
     local ckan_version_ref="$1"
     local env="$2"
@@ -146,15 +164,18 @@ case "$action" in
             exit 1
         fi
 
-        if [ ! -d "ckan-$ckan_version_ref" ]; then
+        if ! resolved_ckan_version_ref=$(resolve_ckan_version_ref "$ckan_version_ref"); then
             echo "Unknown version: $ckan_version_ref"
             exit 1
         fi
+        ckan_version_ref="$resolved_ckan_version_ref"
 
         shift 2
 
         base_or_dev=""
         python_version=""
+        build_base=false
+        build_dev=false
 
         while [[ $# -gt 0 ]]; do
             case "$1" in
@@ -193,6 +214,18 @@ case "$action" in
         ;;
     "push")
         ckan_version_ref=$2
+
+        if [ -z "$ckan_version_ref" ]; then
+            echo "Missing version"
+            show_usage
+            exit 1
+        fi
+
+        if ! resolved_ckan_version_ref=$(resolve_ckan_version_ref "$ckan_version_ref"); then
+            echo "Unknown version: $ckan_version_ref"
+            exit 1
+        fi
+        ckan_version_ref="$resolved_ckan_version_ref"
 
         read -p "$check_push_msg" -n 1 -r answer
         echo
