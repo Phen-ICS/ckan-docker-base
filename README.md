@@ -52,6 +52,22 @@ ckan-X.XX
 `start_ckan.sh` contains environment variables to configure the behavior of the [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) server that runs CKAN.
 See [here](https://github.com/ckan/ckan-docker#uwsgi-command-line-arguments) to find the documentation of the available options.
 
+### Gitlab CI tests
+
+Image changes are validated by automated pipelines that build and smoke-test each CKAN version against Postgres, Solr, and Redis.
+
+**GitHub Actions** (`.github/workflows/`) runs on every push. The reusable workflow in `reusable-build-and-test.yml` is called per version (e.g. `build-and-test-2.11.yml`) and performs:
+
+1. Build the **base** image from `VERSION.txt` and `PYTHON_VERSION.txt`
+2. Run `ckan --help` inside the base image
+3. Verify a child image can be built `FROM` the base image
+4. Build the **dev** image
+5. Run a CKAN pytest (`TestDatasetCreate`) inside the dev image
+
+**GitLab CI** (`.gitlab-ci.yml`) mirrors the same test logic for CKAN 2.11. The test script lives in `.gitlab/scripts/test-ckan-images.sh` and uses a Docker network to reach the service containers (the GitLab equivalent of GitHub's `--net=host` setup).
+
+On the default branch or tags, a second GitLab job (`.gitlab/scripts/publish-ckan-images.sh`) publishes the base and dev images to the GitLab container registry after tests pass.
+
 ### Release
 
 Images are built and pushed to the Docker Hub after a new [release](https://github.com/ckan/ckan-docker-base/releases)
