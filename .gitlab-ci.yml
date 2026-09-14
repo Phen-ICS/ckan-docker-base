@@ -34,6 +34,6 @@ publish_ckan_2_11_images:
     - when: never
   before_script:
     - apk add --no-cache git
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
   script:
     - .gitlab/scripts/publish-ckan-images.sh
